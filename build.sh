@@ -81,6 +81,8 @@ if [[ "${HOST_TRIPLE}" == *"apple"* ]]; then
     ./src/llvm-project/lldb/scripts/macos-setup-codesign.sh
 fi
 
+# Skip bootstrap target sanity check for custom TOS targets
+export BOOTSTRAP_SKIP_TARGET_SANITY=1
 ./build.sh
 popd
 
