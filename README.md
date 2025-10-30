@@ -1,9 +1,9 @@
-# Customized Rust/Clang toolchain for Solana Platform
+# Customized Rust/Clang toolchain for TOS Platform
 
-[![Build Status](https://github.com/anza-xyz/platform-tools/actions/workflows/main.yml/badge.svg)](https://github.com/anza-xyz/platform-tools/actions/)
+[![Build Status](https://github.com/tos-network/platform-tools/actions/workflows/main.yml/badge.svg)](https://github.com/tos-network/platform-tools/actions/)
 
 Builds Clang and Rust compiler binaries that incorporate
-customizations and fixes required by Solana but not yet upstreamed
+customizations and fixes required by TOS but not yet upstreamed
 into Rust or LLVM.
 
 * Builds Rust for Linux (Debian) natively, or in Docker if runs on MacOS
@@ -25,11 +25,11 @@ ignored.
 
 This repo depends on the following:
 
-* https://github.com/anza-xyz/rust
-* https://github.com/anza-xyz/llvm-project
-* https://github.com/anza-xyz/compiler-builtins
-* https://github.com/anza-xyz/newlib
-* https://github.com/anza-xyz/cargo
+* https://github.com/tos-network/rust
+* https://github.com/tos-network/llvm-project
+* https://github.com/tos-network/compiler-builtins
+* https://github.com/tos-network/newlib
+* https://github.com/tos-network/cargo
 
 Any changes that need to go into a Rust release must be made in the
 appropriate repos listed above.

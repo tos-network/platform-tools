@@ -96,8 +96,8 @@ jobs:
     - name: Upload ${{ matrix.tar }} tarball
       uses: actions/upload-artifact@v4
       with:
-        name: platform-tools-${{ matrix.tar }}-${{ matrix.arch }}.tar.bz2
-        path: platform-tools-${{ matrix.tar }}-${{ matrix.arch }}.tar.bz2
+        name: tos-platform-tools-${{ matrix.tar }}-${{ matrix.arch }}.tar.bz2
+        path: tos-platform-tools-${{ matrix.tar }}-${{ matrix.arch }}.tar.bz2
 
   release:
     name: Upload Release Assets
@@ -108,23 +108,23 @@ jobs:
     - name: Download Linux x86 tarball
       uses: actions/download-artifact@v4
       with:
-        name: platform-tools-linux-x86_64.tar.bz2
+        name: tos-platform-tools-linux-x86_64.tar.bz2
     - name: Download Linux ARM tarball
       uses: actions/download-artifact@v4
       with:
-        name: platform-tools-linux-aarch64.tar.bz2
+        name: tos-platform-tools-linux-aarch64.tar.bz2
     - name: Download macOS ARM tarball
       uses: actions/download-artifact@v4
       with:
-        name: platform-tools-osx-aarch64.tar.bz2
+        name: tos-platform-tools-osx-aarch64.tar.bz2
     - name: Download macOS x86 tarball
       uses: actions/download-artifact@v4
       with:
-        name: platform-tools-osx-x86_64.tar.bz2
+        name: tos-platform-tools-osx-x86_64.tar.bz2
     - name: Download Windows tarball
       uses: actions/download-artifact@v4
       with:
-        name: platform-tools-windows-x86_64.tar.bz2
+        name: tos-platform-tools-windows-x86_64.tar.bz2
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -142,8 +142,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: platform-tools-linux-x86_64.tar.bz2
-        asset_name: platform-tools-linux-x86_64.tar.bz2
+        asset_path: tos-platform-tools-linux-x86_64.tar.bz2
+        asset_name: tos-platform-tools-linux-x86_64.tar.bz2
         asset_content_type: application/zip
     - name: Release Linux ARM tarball
       id: upload-release-linux-aarch64
@@ -152,8 +152,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: platform-tools-linux-aarch64.tar.bz2
-        asset_name: platform-tools-linux-aarch64.tar.bz2
+        asset_path: tos-platform-tools-linux-aarch64.tar.bz2
+        asset_name: tos-platform-tools-linux-aarch64.tar.bz2
         asset_content_type: application/zip
     - name: Release macOS ARM tarball
       id: upload-release-macos-aarch64
@@ -162,8 +162,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: platform-tools-osx-aarch64.tar.bz2
-        asset_name: platform-tools-osx-aarch64.tar.bz2
+        asset_path: tos-platform-tools-osx-aarch64.tar.bz2
+        asset_name: tos-platform-tools-osx-aarch64.tar.bz2
         asset_content_type: application/zip
     - name: Release macOS x86 tarball
       id: upload-release-macos-x86_64
@@ -172,8 +172,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: platform-tools-osx-x86_64.tar.bz2
-        asset_name: platform-tools-osx-x86_64.tar.bz2
+        asset_path: tos-platform-tools-osx-x86_64.tar.bz2
+        asset_name: tos-platform-tools-osx-x86_64.tar.bz2
         asset_content_type: application/zip
     - name: Release Windows tarball
       id: upload-release-windows
@@ -182,6 +182,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: platform-tools-windows-x86_64.tar.bz2
-        asset_name: platform-tools-windows-x86_64.tar.bz2
+        asset_path: tos-platform-tools-windows-x86_64.tar.bz2
+        asset_name: tos-platform-tools-windows-x86_64.tar.bz2
         asset_content_type: application/zip
