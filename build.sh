@@ -65,7 +65,7 @@ rm -rf "${OUT_DIR}"
 mkdir -p "${OUT_DIR}"
 pushd "${OUT_DIR}"
 
-git clone --single-branch --branch main --recurse-submodules --shallow-submodules https://github.com/tos-network/rust.git
+git clone --single-branch --branch tos-1.89.0 --recurse-submodules --shallow-submodules https://github.com/tos-network/rust.git
 echo "$( cd rust && git rev-parse HEAD )  https://github.com/tos-network/rust.git" >> version.md
 
 git clone --single-branch --branch main https://github.com/tos-network/cargo.git
