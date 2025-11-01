@@ -15,7 +15,7 @@ function build_newlib() {
     CC="${OUT_DIR}/rust/build/${HOST_TRIPLE}/llvm/bin/clang" \
       AR="${OUT_DIR}/rust/build/${HOST_TRIPLE}/llvm/bin/llvm-ar" \
       RANLIB="${OUT_DIR}/rust/build/${HOST_TRIPLE}/llvm/bin/llvm-ranlib" \
-      ../newlib/newlib/configure --target=sbf-tos-tos --host=sbf-tos --build="${HOST_TRIPLE}" --prefix="${OUT_DIR}/newlib_$1"
+      ../newlib/newlib/configure --target=tbf-tos-tos --host=tbf-tos --build="${HOST_TRIPLE}" --prefix="${OUT_DIR}/newlib_$1"
     make install
     popd
 }
@@ -26,10 +26,10 @@ function copy_newlib() {
         folder_name="$1"
     fi
 
-    mkdir -p deploy/llvm/lib/sbpf"${folder_name}"
-    mkdir -p deploy/llvm/sbpf"${folder_name}"
-    cp -R newlib_"$1"/sbf-tos/lib/lib{c,m}.a deploy/llvm/lib/sbpf"${folder_name}"/
-    cp -R newlib_"$1"/sbf-tos/include deploy/llvm/sbpf"${folder_name}"/    
+    mkdir -p deploy/llvm/lib/tbpf"${folder_name}"
+    mkdir -p deploy/llvm/tbpf"${folder_name}"
+    cp -R newlib_"$1"/tbf-tos/lib/lib{c,m}.a deploy/llvm/lib/tbpf"${folder_name}"/
+    cp -R newlib_"$1"/tbf-tos/include deploy/llvm/tbpf"${folder_name}"/   
 }
 
 unameOut="$(uname -s)"
@@ -98,6 +98,12 @@ if [[ "${HOST_TRIPLE}" != "x86_64-pc-windows-msvc" ]] ; then
     git clone --single-branch --branch main https://github.com/tos-network/newlib.git
     echo "$( cd newlib && git rev-parse HEAD )  https://github.com/tos-network/newlib.git" >> version.md
 
+    # Patch config.sub to recognize tbf-tos and tbpf-tos targets
+    pushd newlib/newlib
+    # Add tbf-tos and tbpf-tos to the OS list in config.sub
+    sed -i.bak 's/\(-none\* | -aout\* | -coff\* | -oabi\* | -\*elf\* | -rtems\*\)/\1 | -tos*/' config.sub
+    popd
+
     build_newlib "v0"
     build_newlib "v1"
     build_newlib "v2"
@@ -110,10 +116,6 @@ cp -R "rust/build/${HOST_TRIPLE}/stage1/bin" deploy/rust/
 cp -R "cargo/target/release/cargo${EXE_SUFFIX}" deploy/rust/bin/
 mkdir -p deploy/rust/lib/rustlib/
 cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/${HOST_TRIPLE}" deploy/rust/lib/rustlib/
-cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/sbf-tos-tos" deploy/rust/lib/rustlib/
-cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/sbpf-tos-tos" deploy/rust/lib/rustlib/
-cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/sbpfv1-tos-tos" deploy/rust/lib/rustlib/
-cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/sbpfv2-tos-tos" deploy/rust/lib/rustlib/
 cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/tbf-tos-tos" deploy/rust/lib/rustlib/
 cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/tbpf-tos-tos" deploy/rust/lib/rustlib/
 cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/tbpfv1-tos-tos" deploy/rust/lib/rustlib/
@@ -153,8 +155,8 @@ EOF
          )
 cp -R "rust/build/${HOST_TRIPLE}/llvm/build/lib/clang" deploy/llvm/lib/
 if [[ "${HOST_TRIPLE}" != "x86_64-pc-windows-msvc" ]] ; then
-    cp -R newlib_v0/sbf-tos/lib/lib{c,m}.a deploy/llvm/lib/
-    cp -R newlib_v0/sbf-tos/include deploy/llvm/
+    cp -R newlib_v0/tbf-tos/lib/lib{c,m}.a deploy/llvm/lib/
+    cp -R newlib_v0/tbf-tos/include deploy/llvm/
     
     copy_newlib "v0"
     copy_newlib "v1"
@@ -216,5 +218,5 @@ if [[ "$(uname)" == "Darwin" ]] && [[ $# == 1 ]] && [[ "$1" == "--docker" ]] ; t
     id=$(docker create tosnetwork/platform-tools /build.sh "${OUT_DIR}")
     docker cp build.sh "${id}:/"
     docker start -a "${id}"
-    docker cp "${id}:${OUT_DIR}/tos-sbf-tools-linux-x86_64.tar.bz2" "${OUT_DIR}"
+    docker cp "${id}:${OUT_DIR}/tos-tbf-tools-linux-x86_64.tar.bz2" "${OUT_DIR}"
 fi
