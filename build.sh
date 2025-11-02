@@ -100,8 +100,25 @@ if [[ "${HOST_TRIPLE}" != "x86_64-pc-windows-msvc" ]] ; then
 
     # Patch config.sub to recognize tbf-tos and tbpf-tos targets
     pushd newlib
-    # Add tbf-tos and tbpf-tos to the OS list in config.sub
-    sed -i.bak 's/| rtems\* \\/| rtems* | -tos* \\/' config.sub
+    # Add support for custom TOS targets so config.sub recognizes them
+    python3 - <<'PY'
+from pathlib import Path
+
+path = Path("config.sub")
+text = path.read_text()
+
+os_marker = "| cygwin* | msys* | pe* | moss* | proelf* | rtems* \\"
+os_replacement = "| cygwin* | msys* | pe* | moss* | proelf* | rtems* | tos* \\"
+if "| tos* \\" not in text and os_marker in text:
+    text = text.replace(os_marker, os_replacement)
+
+cpu_marker = "| bfin | bpf | bs2000 \\"
+cpu_replacement = "| bfin | bpf | tbf | tbpf | tbpfv1 | tbpfv2 | bs2000 \\"
+if " | tbf | " not in text and cpu_marker in text:
+    text = text.replace(cpu_marker, cpu_replacement)
+
+path.write_text(text)
+PY
     popd
 
     build_newlib "v0"
