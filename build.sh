@@ -99,7 +99,7 @@ if [[ "${HOST_TRIPLE}" != "x86_64-pc-windows-msvc" ]] ; then
     echo "$( cd newlib && git rev-parse HEAD )  https://github.com/tos-network/newlib.git" >> version.md
 
     # Patch config.sub to recognize tbf-tos and tbpf-tos targets
-    pushd newlib/newlib
+    pushd newlib
     # Add tbf-tos and tbpf-tos to the OS list in config.sub
     sed -i.bak 's/\(-none\* | -aout\* | -coff\* | -oabi\* | -\*elf\* | -rtems\*\)/\1 | -tos*/' config.sub
     popd
