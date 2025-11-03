@@ -78,7 +78,8 @@ if [[ "${HOST_TRIPLE}" == "x86_64-pc-windows-msvc" ]] ; then
 fi
 
 if [[ "${HOST_TRIPLE}" == *"apple"* ]]; then
-    ./src/llvm-project/lldb/scripts/macos-setup-codesign.sh
+    # Do not build lldb on macOS to avoid codesign certificate issues
+    sed -i '' 's#enable-projects = "clang;lld;lldb"#enable-projects = "clang;lld"#g' bootstrap.toml
 fi
 
 # Skip bootstrap target sanity check for custom TOS targets
@@ -174,17 +175,20 @@ cp -R "rust/build/${HOST_TRIPLE}/llvm/build/lib/clang" deploy/llvm/lib/
 if [[ "${HOST_TRIPLE}" != "x86_64-pc-windows-msvc" ]] ; then
     cp -R newlib_v0/tbf-tos/lib/lib{c,m}.a deploy/llvm/lib/
     cp -R newlib_v0/tbf-tos/include deploy/llvm/
-    
+
     copy_newlib "v0"
     copy_newlib "v1"
     copy_newlib "v2"
 
-    cp -R rust/src/llvm-project/lldb/scripts/tos/* deploy/llvm/bin/
-    cp -R rust/build/${HOST_TRIPLE}/llvm/lib/liblldb.* deploy/llvm/lib/
-    if [[ "${HOST_TRIPLE}" == "x86_64-unknown-linux-gnu" || "${HOST_TRIPLE}" == "aarch64-unknown-linux-gnu" ]]; then
-        cp -R rust/build/${HOST_TRIPLE}/llvm/local/lib/python* deploy/llvm/lib
-    else
-        cp -R rust/build/${HOST_TRIPLE}/llvm/lib/python* deploy/llvm/lib/
+    # Only copy LLDB files if LLDB was built (not on Windows or macOS)
+    if [[ "${HOST_TRIPLE}" != *"apple"* ]] && [[ -d "rust/src/llvm-project/lldb/scripts/tos" ]]; then
+        cp -R rust/src/llvm-project/lldb/scripts/tos/* deploy/llvm/bin/
+        cp -R rust/build/${HOST_TRIPLE}/llvm/lib/liblldb.* deploy/llvm/lib/
+        if [[ "${HOST_TRIPLE}" == "x86_64-unknown-linux-gnu" || "${HOST_TRIPLE}" == "aarch64-unknown-linux-gnu" ]]; then
+            cp -R rust/build/${HOST_TRIPLE}/llvm/local/lib/python* deploy/llvm/lib
+        else
+            cp -R rust/build/${HOST_TRIPLE}/llvm/lib/python* deploy/llvm/lib/
+        fi
     fi
 fi
 
