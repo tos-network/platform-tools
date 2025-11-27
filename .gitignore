@@ -1,4 +1,6 @@
 deploy/
 out/
+extracted/
 
 .DS_Store
+tos-platform-tools-osx-aarch64.tar.bz2
