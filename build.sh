@@ -4,7 +4,7 @@ set -ex
 # Parallel build configuration
 PARALLEL_JOBS=${PARALLEL_JOBS:-8}
 export MAKEFLAGS="-j${PARALLEL_JOBS}"
-export CARGO_BUILD_JOBS=${PARALLEL_JOBS}
+export CARGO_BUILD_JOBS="${PARALLEL_JOBS}"
 
 # Log file configuration
 LOG_DIR="/tmp"
@@ -34,7 +34,7 @@ function build_newlib() {
       AR="${OUT_DIR}/rust/build/${HOST_TRIPLE}/llvm/bin/llvm-ar" \
       RANLIB="${OUT_DIR}/rust/build/${HOST_TRIPLE}/llvm/bin/llvm-ranlib" \
       ../newlib/newlib/configure --target=tbf-tos-tos --host=tbf-tos --build="${HOST_TRIPLE}" --prefix="${OUT_DIR}/newlib_$1"
-    make -j${PARALLEL_JOBS} install
+    make -j"${PARALLEL_JOBS}" install
     popd
 }
 
@@ -244,7 +244,7 @@ tos-lldb
 EOF
          )
 
-tar -C deploy -jcf ${ARTIFACT} .
+tar -C deploy -jcf "${ARTIFACT}" .
 rm -rf deploy
 
 popd
