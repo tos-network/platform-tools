@@ -1,13 +1,31 @@
 #!/usr/bin/env bash
 set -ex
 
+# Parallel build configuration
+PARALLEL_JOBS=${PARALLEL_JOBS:-8}
+export MAKEFLAGS="-j${PARALLEL_JOBS}"
+export CARGO_BUILD_JOBS=${PARALLEL_JOBS}
+
+# Log file configuration
+LOG_DIR="/tmp"
+LOG_FILE="${LOG_DIR}/platform-tools-build-$(date +%Y%m%d-%H%M%S).log"
+
+# Redirect all output to both console and log file
+exec > >(tee -a "${LOG_FILE}") 2>&1
+
+echo "=========================================="
+echo "Platform-tools build started at $(date)"
+echo "Parallel jobs: ${PARALLEL_JOBS}"
+echo "Log file: ${LOG_FILE}"
+echo "=========================================="
+
 function build_newlib() {
     mkdir -p newlib_build_"$1"
     mkdir -p newlib_"$1"
     pushd newlib_build_"$1"
 
     local c_flags="-O2"
-    if [[ "$1" != "v0" ]] ; then 
+    if [[ "$1" != "v0" ]] ; then
       c_flags="${c_flags} -mcpu=$1"
     fi
 
@@ -16,7 +34,7 @@ function build_newlib() {
       AR="${OUT_DIR}/rust/build/${HOST_TRIPLE}/llvm/bin/llvm-ar" \
       RANLIB="${OUT_DIR}/rust/build/${HOST_TRIPLE}/llvm/bin/llvm-ranlib" \
       ../newlib/newlib/configure --target=tbf-tos-tos --host=tbf-tos --build="${HOST_TRIPLE}" --prefix="${OUT_DIR}/newlib_$1"
-    make install
+    make -j${PARALLEL_JOBS} install
     popd
 }
 
