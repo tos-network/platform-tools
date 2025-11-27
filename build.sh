@@ -156,6 +156,7 @@ cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/tbf-tos-tos" deploy/rust/lib
 cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/tbpf-tos-tos" deploy/rust/lib/rustlib/
 cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/tbpfv1-tos-tos" deploy/rust/lib/rustlib/
 cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/tbpfv2-tos-tos" deploy/rust/lib/rustlib/
+cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/tbpfv3-tos-tos" deploy/rust/lib/rustlib/
 find . -maxdepth 6 -type f -path "./rust/build/${HOST_TRIPLE}/stage1/lib/*" -exec cp {} deploy/rust/lib \;
 mkdir -p deploy/rust/lib/rustlib/src/rust
 cp "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/src/rust/Cargo.lock" deploy/rust/lib/rustlib/src/rust
