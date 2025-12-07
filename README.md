@@ -6,14 +6,59 @@ Builds Clang and Rust compiler binaries that incorporate
 customizations and fixes required by TOS but not yet upstreamed
 into Rust or LLVM.
 
+## Quick Start
+
+Download the pre-built toolchain from [GitHub Releases](https://github.com/tos-network/platform-tools/releases):
+
+```bash
+# Install to Solana-aligned cache directory (recommended)
+mkdir -p ~/.cache/tos/v1.52/platform-tools
+cd ~/.cache/tos/v1.52/platform-tools
+
+# Download for your platform:
+# - macOS Apple Silicon: tos-platform-tools-osx-aarch64.tar.bz2
+# - macOS Intel: tos-platform-tools-osx-x86_64.tar.bz2
+# - Linux x86_64: tos-platform-tools-linux-x86_64.tar.bz2
+# - Linux aarch64: tos-platform-tools-linux-aarch64.tar.bz2
+# - Windows: tos-platform-tools-windows-x86_64.tar.bz2
+
+curl -L -O https://github.com/tos-network/platform-tools/releases/download/v1.52/tos-platform-tools-osx-aarch64.tar.bz2
+tar -xjf tos-platform-tools-osx-aarch64.tar.bz2
+
+# Verify installation
+./rust/bin/rustc --version
+# rustc 1.89.0-dev
+
+./rust/bin/rustc --print target-list | grep tbpf
+# tbpf-tos-tos
+# tbpfv0-tos-tos
+# tbpfv1-tos-tos
+# tbpfv2-tos-tos
+# tbpfv3-tos-tos
+# tbpfv4-tos-tos
+```
+
+## Supported TBPF Targets
+
+| Target | e_flags | Description |
+|--------|---------|-------------|
+| `tbpf-tos-tos` | 0x0 | Legacy (v0) |
+| `tbpfv0-tos-tos` | 0x0 | v0 |
+| `tbpfv1-tos-tos` | 0x1 | Dynamic stack frames |
+| `tbpfv2-tos-tos` | 0x2 | Arithmetic improvements |
+| `tbpfv3-tos-tos` | 0x3 | Static syscalls, strict ELF (production) |
+| `tbpfv4-tos-tos` | 0x4 | ABI v2 (experimental) |
+
+## Building from Source
+
 * Builds Rust for Linux (Debian) natively, or in Docker if runs on MacOS
 * Builds Rust for MacOS natively therefore skipped if not building on a Mac
 * Results in tarballs in `out/` that can be released
 
-### Building
+### Build Command
 
 ```bash
-$ ./build.sh [--docker]
+./build.sh [--docker]
 ```
 
 The `--docker` option can be used to build Linux binaries on macOS in
@@ -21,7 +66,7 @@ a docker container.  If the option is not specified only macOS
 binaries are built on a Mac.  On Linux the `--docker` option is
 ignored.
 
-### Releases
+## Dependencies
 
 This repo depends on the following:
 
@@ -42,6 +87,18 @@ GitHub Actions.
 
 The release of the binaries is fully automated.  Do not release
 manually.  To release the binaries, push a release tag that starts
-with the '*v*' character, e.g. `v1.2`.  The GitHub workflow
+with the '*v*' character, e.g. `v1.52`.  The GitHub workflow
 automatically triggers a new build, creates a release with the name of
 the tag, and uploads the toolchain tarballs as the release assets.
+
+```bash
+# Create and push a release tag
+git tag -a v1.52 -m "TOS Platform Tools v1.52"
+git push origin v1.52
+```
+
+## Current Version
+
+- **Platform Tools**: v1.52
+- **Rust**: 1.89.0-dev
+- **Default Target**: tbpfv3-tos-tos
