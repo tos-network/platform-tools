@@ -12,8 +12,8 @@ Download the pre-built toolchain from [GitHub Releases](https://github.com/tos-n
 
 ```bash
 # Install to Solana-aligned cache directory (recommended)
-mkdir -p ~/.cache/tos/v1.52/platform-tools
-cd ~/.cache/tos/v1.52/platform-tools
+mkdir -p ~/.cache/tos/v1.53/platform-tools
+cd ~/.cache/tos/v1.53/platform-tools
 
 # Download for your platform:
 # - macOS Apple Silicon: tos-platform-tools-osx-aarch64.tar.bz2
@@ -22,7 +22,7 @@ cd ~/.cache/tos/v1.52/platform-tools
 # - Linux aarch64: tos-platform-tools-linux-aarch64.tar.bz2
 # - Windows: tos-platform-tools-windows-x86_64.tar.bz2
 
-curl -L -O https://github.com/tos-network/platform-tools/releases/download/v1.52/tos-platform-tools-osx-aarch64.tar.bz2
+curl -L -O https://github.com/tos-network/platform-tools/releases/download/v1.53/tos-platform-tools-osx-aarch64.tar.bz2
 tar -xjf tos-platform-tools-osx-aarch64.tar.bz2
 
 # Verify installation
@@ -87,18 +87,18 @@ GitHub Actions.
 
 The release of the binaries is fully automated.  Do not release
 manually.  To release the binaries, push a release tag that starts
-with the '*v*' character, e.g. `v1.52`.  The GitHub workflow
+with the '*v*' character, e.g. `v1.53`.  The GitHub workflow
 automatically triggers a new build, creates a release with the name of
 the tag, and uploads the toolchain tarballs as the release assets.
 
 ```bash
 # Create and push a release tag
-git tag -a v1.52 -m "TOS Platform Tools v1.52"
-git push origin v1.52
+git tag -a v1.53 -m "TOS Platform Tools v1.53"
+git push origin v1.53
 ```
 
 ## Current Version
 
-- **Platform Tools**: v1.52
+- **Platform Tools**: v1.53
 - **Rust**: 1.89.0-dev
 - **Default Target**: tbpfv3-tos-tos
