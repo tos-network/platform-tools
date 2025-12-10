@@ -113,6 +113,18 @@ else
 fi
 popd
 
+# Build cargo-tako
+git clone --single-branch --branch main https://github.com/tos-network/cargo-tako.git
+echo "$( cd cargo-tako && git rev-parse HEAD )  https://github.com/tos-network/cargo-tako.git" >> version.md
+
+pushd cargo-tako
+if [[ "${HOST_TRIPLE}" == "x86_64-unknown-linux-gnu" ]] ; then
+    OPENSSL_STATIC=1 OPENSSL_LIB_DIR=/usr/lib/x86_64-linux-gnu OPENSSL_INCLUDE_DIR=/usr/include/openssl cargo build --release
+else
+    OPENSSL_STATIC=1 cargo build --release
+fi
+popd
+
 if [[ "${HOST_TRIPLE}" != "x86_64-pc-windows-msvc" ]] ; then
     git clone --single-branch --branch main https://github.com/tos-network/newlib.git
     echo "$( cd newlib && git rev-parse HEAD )  https://github.com/tos-network/newlib.git" >> version.md
@@ -150,6 +162,7 @@ mkdir -p deploy/rust
 cp version.md deploy/
 cp -R "rust/build/${HOST_TRIPLE}/stage1/bin" deploy/rust/
 cp -R "cargo/target/release/cargo${EXE_SUFFIX}" deploy/rust/bin/
+cp -R "cargo-tako/target/release/cargo-tako${EXE_SUFFIX}" deploy/rust/bin/
 mkdir -p deploy/rust/lib/rustlib/
 cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/${HOST_TRIPLE}" deploy/rust/lib/rustlib/
 cp -R "rust/build/${HOST_TRIPLE}/stage1/lib/rustlib/tbf-tos-tos" deploy/rust/lib/rustlib/
@@ -217,6 +230,7 @@ do
     "./deploy/rust/bin/${f}${EXE_SUFFIX}" --version
 done < <(cat <<EOF
 cargo
+cargo-tako
 rustc
 rustdoc
 EOF
